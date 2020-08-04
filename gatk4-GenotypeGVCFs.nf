@@ -216,6 +216,12 @@ process HardFilter {
 	"""
 }	
 
+vcf_hf_ch = vcf_hf_ch.map{f ->
+  bf = f.baseName
+  ch = bf.split('.')[1]
+  [ch, f]}.toSortedList().map{ch,f ->
+  f}.view()
+
 process GatherVcfs {
 
 	cpus 1
