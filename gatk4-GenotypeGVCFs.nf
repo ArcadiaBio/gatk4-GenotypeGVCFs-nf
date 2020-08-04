@@ -216,13 +216,7 @@ process HardFilter {
 	"""
 }	
 
-vcf_hf_ch = vcf_hf_ch.map{f ->
-  bf = f.baseName
-  ch = bf.tokenize(".")[1]
-  [ch, f]
-  }.toSortedList( { a, b -> a[0] <=> b[0] } ).view().map{l ->
-  m = l.collect{it[1]}
-  m}
+
 process GatherVcfs {
 
 	cpus 1
@@ -232,7 +226,7 @@ process GatherVcfs {
 	tag "${params.cohort}"
 
     input:
-      file (vcf) from vcf_hf_ch
+      file (vcf) from vcf_hf_ch.collect()
 	file (vcf_idx) from vcf_idx_hf_ch.collect()
 
 	output:
@@ -251,7 +245,7 @@ process GatherVcfs {
 	"""
 	${GATK} --java-options "-Xmx3g -Xms3g" \
       GatherVcfs \
-      --INPUT ${vcf.sort().join(" --INPUT ")} \
+      --INPUT ${vcf.collect().sort{ it.baseName.tokenize('.')[1] }.join("--INPUT" ) } \
       --OUTPUT ${params.cohort}.vcf
 
 	"""
