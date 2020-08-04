@@ -160,7 +160,7 @@ process GenotypeGVCFs {
 	"""
     samtools faidx ${genome}
 
-    java -jar \$PICARD_TOOLS_LIBDIR/picard.jar \
+    java -jar ${picard_dir}/picard.jar \
     CreateSequenceDictionary \
     R=${genome} \
     O=${genome.baseName}.dict
