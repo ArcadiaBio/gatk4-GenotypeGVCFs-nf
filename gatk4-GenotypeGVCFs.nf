@@ -216,7 +216,7 @@ process HardFilter {
 	"""
 }	
 
-vcf_hf_ch = vcf_hf_ch.toSortedList()
+vcf_hf_ch = vcf_hf_ch.toSortedList().view()
 
 process GatherVcfs {
 
