@@ -128,8 +128,7 @@ process GenomicsDBImport {
 	${gvcf.collect { "-V $it " }.join()} \
     -L ${chr} \
     --batch-size 50 \
-    --tmp-dir=/tmp \
-	--genomicsdb-workspace-path ${params.cohort}.${chr}
+    --genomicsdb-workspace-path ${params.cohort}.${chr}
 	
 	"""
 }	
