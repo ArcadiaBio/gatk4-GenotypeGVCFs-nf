@@ -216,7 +216,7 @@ process HardFilter {
 	"""
 }	
 
-vcf_hf_ch = vcf_hf_ch.toSortedList().view()
+vcf_hf_ch = vcf_hf_ch.toSortedList()
 
 process GatherVcfs {
 
@@ -246,7 +246,7 @@ process GatherVcfs {
 	"""
 	${GATK} --java-options "-Xmx3g -Xms3g" \
       GatherVcfs \
-      ${vcf.collect("--INPUT $it ").join()} \
+      ${vcf.join(" --INPUT ")} \
       --OUTPUT ${params.cohort}.vcf
 
 	"""
