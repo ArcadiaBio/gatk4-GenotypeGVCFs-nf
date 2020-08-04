@@ -216,7 +216,7 @@ process HardFilter {
 	"""
 }	
 
-
+vcf_hf_ch = vcf_hf_ch.toSortedList()
 
 process GatherVcfs {
 
@@ -227,7 +227,7 @@ process GatherVcfs {
 	tag "${params.cohort}"
 
     input:
-    file (vcf) from vcf_hf_ch.collect()
+    file (vcf) from vcf_hf_ch
 	file (vcf_idx) from vcf_idx_hf_ch.collect()
 
 	output:
@@ -246,7 +246,7 @@ process GatherVcfs {
 	"""
 	${GATK} --java-options "-Xmx3g -Xms3g" \
       GatherVcfs \
-      ${vcf.findAll{ it=~/chr\d+/ }.collect().sort{ it.name.tokenize('.')[1].substring(3).toInteger() }.plus(vcf.find{ it=~/chrX/ }).plus(vcf.find{ it=~/chrY/ }).collect{ "--INPUT $it " }.join() } \
+      ${vcf.collect("--INPUT $it ").join()} \
       --OUTPUT ${params.cohort}.vcf
 
 	"""
