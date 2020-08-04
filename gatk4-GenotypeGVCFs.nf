@@ -219,7 +219,8 @@ process HardFilter {
 vcf_hf_ch = vcf_hf_ch.map{f ->
   bf = f.baseName
   ch = bf.tokenize(".")[1]
-  [ch, f]}.toList().map{a -> a.sort{ a,b -> a[0] <=> b[0] }}.view()
+  [ch, f]
+  }.toSortedList( { a, b -> b[1] <=> a[1] } ).view()
 
 process GatherVcfs {
 
