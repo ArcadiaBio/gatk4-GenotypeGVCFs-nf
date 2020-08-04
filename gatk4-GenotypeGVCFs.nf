@@ -217,6 +217,10 @@ process HardFilter {
 }	
 
 
+chromosomes_ch2 = Channel.fromPath("${params.ref_fai}")
+  .splitCsv(header: false, sep: '\t')
+  .map {row -> row[0]}
+
 process GatherVcfs {
 
 	cpus 1
@@ -226,6 +230,7 @@ process GatherVcfs {
 	tag "${params.cohort}"
 
     input:
+    chrom_list from chromosomes_ch2
       file (vcf) from vcf_hf_ch.collect()
 	file (vcf_idx) from vcf_idx_hf_ch.collect()
 
@@ -242,11 +247,15 @@ process GatherVcfs {
     // 6 : Add chrX and chrY to the list
 
     script:
+	
+	vcf_sorted = vcf.collect().sort{ it -> chrom_list.indexOf(it.baseName.tokenize('.')[1])}.join(" --INPUT " ) }
+	
 	"""
 	${GATK} --java-options "-Xmx3g -Xms3g" \
       GatherVcfs \
-      --INPUT ${vcf.collect().sort{ it.baseName.tokenize('.')[1] }.join(" --INPUT " ) } \
+      --INPUT ${vcf_sorted} \
       --OUTPUT ${params.cohort}.vcf
+	schedule.shifts.sort { shift -> days.indexOf(shift.dayOfWeek) }
 
 	"""
 }	
