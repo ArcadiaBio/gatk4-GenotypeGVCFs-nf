@@ -244,7 +244,7 @@ process GatherVcfs {
 	"""
 	${GATK} --java-options "-Xmx3g -Xms3g" \
       GatherVcfs \
-      --INPUT ${vcf.toSortedList().join(" --INPUT ")} \
+      --INPUT ${vcf.sort().join(" --INPUT ")} \
       --OUTPUT ${params.cohort}.vcf
 
 	"""
