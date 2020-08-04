@@ -245,7 +245,7 @@ process GatherVcfs {
 	"""
 	${GATK} --java-options "-Xmx3g -Xms3g" \
       GatherVcfs \
-      --INPUT ${vcf.collect().sort{ it.baseName.tokenize('.')[1] }.join("--INPUT" ) } \
+      --INPUT ${vcf.collect().sort{ it.baseName.tokenize('.')[1] }.join(" --INPUT " ) } \
       --OUTPUT ${params.cohort}.vcf
 
 	"""
