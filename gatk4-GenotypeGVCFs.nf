@@ -79,20 +79,24 @@ gvcf_idx_ch = Channel
 			
 GATK                              = params.gatk_exec
 ref                               = file(params.ref_fasta)
-dbsnp_resource_vcf                = file(params.dbsnp)
-mills_resource_vcf                = file(params.mills)
-axiomPoly_resource_vcf            = file(params.axiom)
-hapmap_resource_vcf               = file(params.hapmap)
-omni_resource_vcf                 = file(params.omni)
-one_thousand_genomes_resource_vcf = file(params.onekg)
+//dbsnp_resource_vcf                = file(params.dbsnp)
+//mills_resource_vcf                = file(params.mills)
+//axiomPoly_resource_vcf            = file(params.axiom)
+//hapmap_resource_vcf               = file(params.hapmap)
+//omni_resource_vcf                 = file(params.omni)
+//one_thousand_genomes_resource_vcf = file(params.onekg)
 
 // ExcessHet is a phred-scaled p-value. We want a cutoff of anything more extreme
 // than a z-score of -4.5 which is a p-value of 3.4e-06, which phred-scaled is 54.69
 excess_het_threshold = 54.69
 
 // Store the chromosomes in a channel for easier workload scattering on large cohort
-chromosomes_ch = Channel
-    .from( "chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22", "chrX", "chrY" )
+//chromosomes_ch = Channel
+//    .from( "chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22", "chrX", "chrY" )
+
+chromosomes_ch = Channel.fromPath("${params.reference_fai}")
+  .splitCsv(header: false, sep: '\t')
+  .map {row -> [row[0]]}.view()
 
 
 //
@@ -168,7 +172,6 @@ process GenotypeGVCFs {
      GenotypeGVCFs \
      -R ${genome} \
      -O ${params.cohort}.${chr}.vcf \
-     -D ${dbsnp_resource_vcf} \
      -G StandardAnnotation \
      --only-output-calls-starting-in-intervals \
      --use-new-qual-calculator \
@@ -284,11 +287,8 @@ process SID_VariantRecalibrator {
       --trust-all-polymorphic \
       -an QD -an DP -an FS -an SOR -an ReadPosRankSum -an MQRankSum -an InbreedingCoeff \
       -mode INDEL \
-      --max-gaussians 4 \
-      -resource mills,known=false,training=true,truth=true,prior=12:${mills_resource_vcf} \
-      -resource axiomPoly,known=false,training=true,truth=false,prior=10:${axiomPoly_resource_vcf} \
-      -resource dbsnp,known=true,training=false,truth=false,prior=2:${dbsnp_resource_vcf}
-	
+      --max-gaussians 4
+      
 	"""
 }	
 
@@ -325,12 +325,8 @@ process SNV_VariantRecalibrator {
       --trust-all-polymorphic \
       -an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR -an DP -an InbreedingCoeff \
       -mode SNP \
-      --max-gaussians 6 \
-      -resource hapmap,known=false,training=true,truth=true,prior=15:${hapmap_resource_vcf} \
-      -resource omni,known=false,training=true,truth=true,prior=12:${omni_resource_vcf} \
-      -resource 1000G,known=false,training=true,truth=false,prior=10:${one_thousand_genomes_resource_vcf} \
-      -resource dbsnp,known=true,training=false,truth=false,prior=7:${dbsnp_resource_vcf}
-	
+      --max-gaussians 6
+      
 	"""
 }	
 
