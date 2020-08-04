@@ -222,7 +222,7 @@ vcf_hf_ch = vcf_hf_ch.map{f ->
   [ch, f]
   }.toSortedList( { a, b -> a[0] <=> b[0] } ).map{l ->
   m = l.collect{it[1]}
-  m}.view()
+  m}
 process GatherVcfs {
 
 	cpus 1
