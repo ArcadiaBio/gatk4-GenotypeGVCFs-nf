@@ -220,8 +220,9 @@ vcf_hf_ch = vcf_hf_ch.map{f ->
   bf = f.baseName
   ch = bf.tokenize(".")[1]
   [ch, f]
-  }.toSortedList( { a, b -> a[0] <=> b[0] } ).view()
-
+  }.toSortedList( { a, b -> a[0] <=> b[0] } ).map{l ->
+  m = l.collect{it[1]}
+  m}.view()
 process GatherVcfs {
 
 	cpus 1
