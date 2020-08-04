@@ -231,7 +231,7 @@ process GatherVcfs {
 	tag "${params.cohort}"
 
     input:
-    file (vcf) from vcf_hf_ch.collect()
+    set val(chrom), file (vcf) from vcf_hf_ch
 	file (vcf_idx) from vcf_idx_hf_ch.collect()
 
 	output:
