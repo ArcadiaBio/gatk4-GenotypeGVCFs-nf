@@ -216,8 +216,6 @@ process HardFilter {
 	"""
 }	
 
-vcf_hf_ch = vcf_hf_ch.toSortedList()
-
 process GatherVcfs {
 
 	cpus 1
@@ -227,7 +225,7 @@ process GatherVcfs {
 	tag "${params.cohort}"
 
     input:
-    file (vcf) from vcf_hf_ch
+    file (vcf) from vcf_hf_ch.collect()
 	file (vcf_idx) from vcf_idx_hf_ch.collect()
 
 	output:
@@ -246,7 +244,7 @@ process GatherVcfs {
 	"""
 	${GATK} --java-options "-Xmx3g -Xms3g" \
       GatherVcfs \
-      --INPUT ${vcf.join(" --INPUT ")} \
+      --INPUT ${vcf.toSortedList().join(" --INPUT ")} \
       --OUTPUT ${params.cohort}.vcf
 
 	"""
