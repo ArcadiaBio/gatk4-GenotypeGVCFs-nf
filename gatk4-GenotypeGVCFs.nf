@@ -96,7 +96,7 @@ excess_het_threshold = 54.69
 
 chromosomes_ch = Channel.fromPath("${params.ref_fai}")
   .splitCsv(header: false, sep: '\t')
-  .map {row -> row[0]}.view()
+  .map {row -> row[0]}
 
 
 //
