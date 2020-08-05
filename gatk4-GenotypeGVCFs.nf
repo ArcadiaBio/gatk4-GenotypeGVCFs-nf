@@ -221,7 +221,7 @@ chromosomes_ch2 = Channel.fromPath("${params.ref_fai}")
   .splitCsv(header: false, sep: '\t')
   .map {row -> 
   chrom = row[0]
-  params.cohort + '.' + chrom
+  params.cohort + '.' + chrom.tokenize('.')[0]
   }
 
 process GatherVcfs {
