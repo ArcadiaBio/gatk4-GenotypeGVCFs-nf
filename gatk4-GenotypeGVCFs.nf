@@ -172,6 +172,7 @@ process GenotypeGVCFs {
      -R ${genome} \
      -O ${params.cohort}.${chr}.vcf \
      -G StandardAnnotation \
+     --include-non-variant-sites \
      --only-output-calls-starting-in-intervals \
      -V gendb://\$WORKSPACE \
      -L ${chr}
