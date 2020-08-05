@@ -222,7 +222,7 @@ chromosomes_ch2 = Channel.fromPath("${params.ref_fai}")
   .map {row -> 
   chrom = row[0]
   chrom.tokenize('.')[0]
-  }.toList().view()
+  }.toList()
 
 process GatherVcfs {
 
