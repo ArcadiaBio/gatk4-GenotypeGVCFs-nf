@@ -219,7 +219,10 @@ process HardFilter {
 
 chromosomes_ch2 = Channel.fromPath("${params.ref_fai}")
   .splitCsv(header: false, sep: '\t')
-  .map {row -> row[0]}
+  .map {row -> 
+  chrom = row[0]
+  params.cohort + '.' + chrom
+  }
 
 process GatherVcfs {
 
@@ -248,7 +251,7 @@ process GatherVcfs {
 
     script:
 	
-	vcf_sorted = vcf.collect().sort{ it -> chrom_list.indexOf(it.baseName.tokenize('.')[1])}.join(" --INPUT " ) }
+	vcf_sorted = vcf.collect().sort{ it -> chrom_list.indexOf(it.baseName.tokenize('.')[1])}.join(" --INPUT " )
 	
 	"""
 	${GATK} --java-options "-Xmx3g -Xms3g" \
