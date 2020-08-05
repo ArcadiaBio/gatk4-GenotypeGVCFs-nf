@@ -217,12 +217,14 @@ process HardFilter {
 }	
 
 
-chromosomes_ch2 = Channel.fromPath("${params.ref_fai}")
+Channel.fromPath("${params.ref_fai}")
   .splitCsv(header: false, sep: '\t')
   .map {row -> 
   chrom = row[0]
   params.cohort + '.' + chrom.tokenize('.')[0]
-  }
+  }.set(chromosomes_ch2; ch_view)
+ 
+ch_view.take(5).view()
 
 process GatherVcfs {
 
