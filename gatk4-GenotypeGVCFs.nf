@@ -251,7 +251,7 @@ process GatherVcfs {
 
     script:
 	
-	vcf_sorted = vcf.collect().sort{ it -> chrom_list.indexOf(it.baseName.tokenize('.')[1])}.join(" --INPUT " )
+	vcf_sorted = vcf.collect().sort{ chrom_list.indexOf(it.baseName.tokenize('.')[1])}.join(" --INPUT " )
 	
 	"""
 	${GATK} --java-options "-Xmx3g -Xms3g" \
