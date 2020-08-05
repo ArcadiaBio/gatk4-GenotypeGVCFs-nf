@@ -233,7 +233,7 @@ process GatherVcfs {
 	tag "${params.cohort}"
 
     input:
-    chrom_list from chromosomes_ch2
+      val(chrom_list) from chromosomes_ch2
       file (vcf) from vcf_hf_ch.collect()
 	file (vcf_idx) from vcf_idx_hf_ch.collect()
 
