@@ -226,6 +226,8 @@ chromosomes_ch2 = Channel.fromPath("${params.ref_fai}")
 
 process GatherVcfs {
 
+	publishDir params.output_dir, mode: 'copy', pattern: '*.{vcf,idx}'
+
 	cpus 1
 	memory '48 GB'
 	time '12h'
