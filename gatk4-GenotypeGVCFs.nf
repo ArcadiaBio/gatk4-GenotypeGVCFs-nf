@@ -258,8 +258,6 @@ process GatherVcfs {
       GatherVcfs \
       --INPUT ${vcf_sorted} \
       --OUTPUT ${params.cohort}.vcf
-	schedule.shifts.sort { shift -> days.indexOf(shift.dayOfWeek) }
-
 	"""
 }	
 
